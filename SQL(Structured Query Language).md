@@ -305,31 +305,159 @@ SELECT
 FROM ((Orders
 INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
 INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID);
+//테이블3개 조인
 ```
 
 
 
 ## - LEFT JOIN
 
+```sql
+SELECT 컬럼
+FROM 테이블1
+LEFT JOIN 테이블2
+ON 테이블1.컬럼명 = 테이블2.컬럼명;
+```
+
+ex)
+
+```sql
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+ORDER BY Customers.CustomerName;
+```
+
+
+
 ## - RIGHT JOIN
+
+```sql
+SELECT 컬럼
+FROM 테이블1
+RIGHT JOIN 테이블2
+ON 테이블1.컬럼명1 = 테이블2.컬럼명;
+```
+
+ex)
+
+```sql
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+RIGHT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+ORDER BY Customers.CustomerName;
+```
+
+
 
 ## - FULL OUTER JOIN
 
+```sql
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+FULL OUTER JOIN Orders ON Customers.CustomerID=Orders.CustomerID
+ORDER BY Customers.CustomerName;
+```
+
+
+
 ## - Self JOIN
+
+```sql
+
+```
+
+
 
 # [16] UNION
 
+2개 이상의 SELECT의 결과를 합칠떄 사용
+
+* 같은 data type을 가져야함.
+* 각 select는 같은 방식으로 정렬되어있어야 한다.
+* UNION은 같은 값이 있으면 같은 값이 있으면 한 번만 출력
+* UNION ALL은은 같은 값이 있으면 둘 다 출력
+
+```sql
+SELECT 컬럼명 FROM 테이블1
+UNION
+SELECT 컬럼명 FROM 테이블2;
+
+SELECT 컬럼명 FROM 테이블1
+UNION ALL
+SELECT 컬럼명 FROM 테이블2;
+```
+
+ex)
+
+```sql
+SELECT City FROM Customers
+UNION
+SELECT City FROM Customers
+ORDER BY City;
+
+SELECT City, Country FROM Customers
+WHERE Country='Germany'
+UNION
+SELECT City, Country FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+```
 
 
-# [17] GROUP BY
 
+# [17] GROUP BY, HAVING
 
+* GROUPT BY : 특정 속성을 기준으로 그룹화 하여 검색할 때 그룹화 할 속성을 지정한다.(특정 컬럼을 그룹화)
+* HAVING : 특정 컬럼을 구룹화한 결과에 조건을 검
 
-# [18] HAVING
+```sql
+SELECT 컬럼 FROM 테이블 WHERE 조건 GROUP BY 그룹화할 컬럼;
+```
+
+![image](https://user-images.githubusercontent.com/57162257/108675318-fc2f4f80-7529-11eb-9288-b2f0e3e1a984.png)
+
+```sql
+SELECT type, COUNT(name) AS cnt FROM Hero GROUP BY type;
+//Hero테이블에서 type컬럼을 그룹화하여 type컬럼과 type을 기준으로 name컬럼의 갯수를 cnt로 반환.
+```
+
+![image](https://user-images.githubusercontent.com/57162257/108675608-61834080-752a-11eb-814d-ec3cee71a666.png)
+
+```sql
+SELECT type, COUNT(name) AS cnt FROM Hero WHERE type>1 GROUP BY type;
+//Hero테이블에서 type이 1초과인 type을 그룹화하여 type과 name의 갯수 출력
+```
+
+![image](https://user-images.githubusercontent.com/57162257/108675939-ce96d600-752a-11eb-8d86-3f94722429f9.png)
+
+```sql
+SELECT type, COUNT(name) AS cnt FROM Hero GROUP BY type HAVING cnt>=2;
+//type을 그룹화하여 name갯수를 가져온 후, 그 중에서 갯수가 2개 이상인 데이터 조회
+```
+
+![image](https://user-images.githubusercontent.com/57162257/108676208-3816e480-752b-11eb-9fbf-8daeafc59d9a.png)
 
 
 
 # [19] EXISTS
+
+```sql
+SELECT 컬럼
+FROM 테이블
+WHERE EXISTS()
+//EXIST뒤의 ()에 존재하면 출력
+```
+
+EXIST와 IN의 차이
+: IN은 특정 컬럼의 값을 이용할때, EXIST는 서브쿼리를 이용할때
+
+```sql
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.SupplierID AND Price < 20);
+//Products테이블의 SupplierId가 Suppliers테이블의 SupplierID와 같고  Suppliers테이블의 Price가 20보다 작은 SupplierName을 출력
+```
 
 
 
@@ -362,4 +490,19 @@ WHERE 조건
 LIMIT 1;
 //테이블에서 조건인 컬럼값중 맨위의 정보 하나만 반환
 ```
+
+# [25]DATEDIFF
+
+* DATEDIFF(날짜1,날짜2) : 날짜1-날짜2로 dd를 기준으로 나타냄
+
+# [26]DATE_FORMAT
+
+* DATE_FORMAT(date, 형식)
+* 형식은 string타입
+* %Y : 4자리 년도
+* %y : 2자리 년도
+* %m : 월
+* %d : 일
+* %H : 24시간
+* %h : 12시간
 
