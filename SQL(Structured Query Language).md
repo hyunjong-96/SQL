@@ -404,28 +404,6 @@ WHERE Country='Germany'
 ORDER BY City;
 ```
 
-ex) Friends테이블 
-![image](https://user-images.githubusercontent.com/57162257/117579926-417a1b00-b130-11eb-9d3c-f77c06090295.png)
-
-결과
-![image](https://user-images.githubusercontent.com/57162257/117579972-78e8c780-b130-11eb-83e0-26e3b3e786a2.png)
-
-ID1과 ID2를 하나의 컬럼으로 묶고 COUNT를 진행해야한다.
-
-```sql
-WITH A AS(
-    SELECT ID1 AS ID FROM friends
-    UNION ALL
-    SELECT ID2 AS ID FROM friends
-)
-SELECT ID, COUNT(ID) as COUNT
-FROM A
-GROUP BY ID
-ORDER BY ID
-```
-
-참고로 가상테이블 A는 ![image](https://user-images.githubusercontent.com/57162257/117580032-d4b35080-b130-11eb-8fdb-2ec44afd3b7e.png) 이렇게 하나의 컬럼으로 합쳐진다.
-
 # [17] GROUP BY, HAVING
 
 * GROUPT BY : 특정 속성을 기준으로 그룹화 하여 검색할 때 그룹화 할 속성을 지정한다.(특정 컬럼을 그룹화)
@@ -526,3 +504,40 @@ LIMIT 1;
 * %H : 24시간
 * %h : 12시간
 
+
+
+# 시험
+
+------------------------------------
+
+ex) Friends테이블 
+![image](https://user-images.githubusercontent.com/57162257/117579926-417a1b00-b130-11eb-9d3c-f77c06090295.png)
+
+결과
+![image](https://user-images.githubusercontent.com/57162257/117579972-78e8c780-b130-11eb-83e0-26e3b3e786a2.png)
+
+**문제**
+
+1. ID1과 ID2는 서로 친구관계를 나타낸다.
+2. 한번 나온 친구관계는 중복되서 나오지 않는다.
+
+**풀이**
+
+- ID1과 ID2를 하나의 컬럼으로 묶고 COUNT를 진행해야한다.
+- `UNION`으로 하나의 컬럼으로 묶을때 가상테이블을 만들 `WITH 테이블명 AS()` 를 사용한다.
+
+```sql
+WITH A AS(
+    SELECT ID1 AS ID FROM friends
+    UNION ALL
+    SELECT ID2 AS ID FROM friends
+)
+SELECT ID, COUNT(ID) as COUNT
+FROM A
+GROUP BY ID
+ORDER BY ID
+```
+
+참고로 가상테이블 A는 ![image](https://user-images.githubusercontent.com/57162257/117580032-d4b35080-b130-11eb-8fdb-2ec44afd3b7e.png) 이렇게 하나의 컬럼으로 합쳐진다.
+
+-------------------------------
